@@ -1,0 +1,53 @@
+﻿@page "/tasks"
+@using TaskCosmoDB.Data;
+<PageTitle>Tasks</PageTitle>
+<div class="container-fluid container-lg">
+    <div class="row gap-2">
+        <div class="col-12">
+            <h3>Tasks</h3>
+        </div>
+        <div class="col-12 p-0">
+            <form class="d-flex" @onsubmit="saveNewTask">
+                <input type="text" class="form-control me-2" @bind="task.Description" />
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </form>
+        </div>
+    </div>
+        <div class="row my-2 px-0">
+        @if (tasks.Count > 0)
+        {
+            @foreach (var taskItem in tasks)
+            {
+                <div class="col-6 p-1">
+                    <div class="d-flex align-items-center border border-1 task-container px-2 rounded-2">
+                        <InputCheckbox type="checkbox" @bind-Value="taskItem.Status" />
+                        <span class="w-100 px-2">@taskItem.Description</span>
+                        <i class="fa-solid fa-trash text-danger" @onclick="() => RemoveTask(taskItem)"></i>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 p-1 ">
+                <p>No hay nada que mostrar</p>
+            </div>
+        }
+        </div>
+</div>
+
+@code {
+    private List<Data.Task> tasks = new List<Data.Task>();
+    private Data.Task task = new ();
+
+    private void saveNewTask()
+    {
+        tasks.Add(new Data.Task {Description = task.Description});
+        task.Description = string.Empty;
+    }
+
+    private void RemoveTask(Data.Task taskItem)
+    {
+        tasks.Remove(taskItem);
+    }
+}
