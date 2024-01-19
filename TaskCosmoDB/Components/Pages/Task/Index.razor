@@ -1,5 +1,6 @@
 ﻿@page "/tasks"
 @using TaskCosmoDB.Data;
+
 <PageTitle>Tasks</PageTitle>
 <div class="container-fluid container-lg">
     <div class="row gap-2">
@@ -22,7 +23,9 @@
                     <div class="d-flex align-items-center border border-1 task-container px-2 rounded-2">
                         <InputCheckbox type="checkbox" @bind-Value="taskItem.Status" />
                         <span class="w-100 px-2">@taskItem.Description</span>
-                        <i class="fa-solid fa-trash text-danger" @onclick="() => RemoveTask(taskItem)"></i>
+                        <span @onclick="@(() => RemoveTask(taskItem))">
+                            <i class="fa-solid fa-trash text-danger" style="cursor: pointer"></i>
+                        </span>
                     </div>
                 </div>
             }
@@ -30,7 +33,7 @@
         else
         {
             <div class="col-12 p-1 ">
-                <p>No hay nada que mostrar</p>
+                <p class="text-center">No hay nada que mostrar</p>
             </div>
         }
         </div>
@@ -47,7 +50,7 @@
     }
 
     private void RemoveTask(Data.Task taskItem)
-    {
+    { 
         tasks.Remove(taskItem);
     }
 }
