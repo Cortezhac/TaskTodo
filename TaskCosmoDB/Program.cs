@@ -1,10 +1,26 @@
+using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 using TaskCosmoDB.Components;
+using TaskCosmoDB.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<CosmosClient>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    string connectionString = configuration.GetConnectionString("CosmosDbConnection");
+    return new CosmosClient(connectionString);
+});
+
+builder.Services.AddSingleton<AplicationContext>(sp =>
+{
+    return new AplicationContext(sp.GetRequiredService<CosmosClient>(), sp.GetRequiredService<IConfiguration>());
+});
 
 var app = builder.Build();
 

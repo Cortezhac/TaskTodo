@@ -14,4 +14,13 @@
     <Content Include="Components\Pages\Task\Index.razor.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.37.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Provider\" />
+  </ItemGroup>
+
 </Project>

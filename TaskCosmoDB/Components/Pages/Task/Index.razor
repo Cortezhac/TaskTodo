@@ -1,5 +1,7 @@
 ﻿@page "/tasks"
 @using TaskCosmoDB.Data;
+@using Microsoft.Azure.Cosmos;
+@inject Shared.AplicationContext cosmosDbContext;
 
 <PageTitle>Tasks</PageTitle>
 <div class="container-fluid container-lg">
@@ -40,17 +42,31 @@
 </div>
 
 @code {
-    private List<Data.Task> tasks = new List<Data.Task>();
-    private Data.Task task = new ();
+    private List<Data.TaskTodo> tasks = new List<Data.TaskTodo>();
+    private Data.TaskTodo task = new ();
 
-    private void saveNewTask()
+    protected override async Task OnInitializedAsync()
     {
-        tasks.Add(new Data.Task {Description = task.Description});
-        task.Description = string.Empty;
+        await base.OnInitializedAsync();
+        LoadTask();
     }
 
-    private void RemoveTask(Data.Task taskItem)
+    private async Task LoadTask()
+    {
+        tasks = await new TaskTodo().All(cosmosDbContext);
+        StateHasChanged();
+    }
+
+    private async Task saveNewTask()
+    {
+        await new TaskTodo().Create(cosmosDbContext, new Data.TaskTodo { Description = task.Description });
+        task.Description = string.Empty;
+        LoadTask();
+    }
+
+    private async Task RemoveTask(Data.TaskTodo taskItem)
     { 
-        tasks.Remove(taskItem);
+        await new TaskTodo().Delete(cosmosDbContext, taskItem.Id);
+        LoadTask();
     }
 }
